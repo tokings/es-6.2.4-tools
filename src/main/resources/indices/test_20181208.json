@@ -1,0 +1,41 @@
+{
+	"settings": {
+		"index": {
+			"number_of_shards": "1",
+			"number_of_replicas": "0"
+		}
+	},
+	"mappings": {
+		"table": {
+			"properties": {
+				"key": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"value": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"remark": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				}
+			}
+		}
+	}
+}

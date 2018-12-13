@@ -1,0 +1,221 @@
+{
+	"settings": {
+		"index": {
+			"number_of_shards": "1",
+			"number_of_replicas": "0"
+		}
+	},
+	"mappings": {
+		"table": {
+			"properties": {
+				"cert_type": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"validate_date": {
+					"type": "date"
+				},
+				"operator_id": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"cert_id": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"remark": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"task_id": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"channel_code": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"repayment_type": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"customer_credit_his_id": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"score": {
+					"type": "float"
+				},
+				"rate": {
+					"type": "float"
+				},
+				"cust_name": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"term": {
+					"type": "long"
+				},
+				"id": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"create_date": {
+					"type": "date"
+				},
+				"start_date": {
+					"type": "date"
+				},
+				"recheck_operator": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"loan_prod": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"housinginfo": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"actived_date": {
+					"type": "date"
+				},
+				"credit_amount": {
+					"type": "float"
+				},
+				"source_type": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"credit_type": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"latest_expire_date": {
+					"type": "date"
+				},
+				"manual_credit_audit_info_id": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"frozen_amount": {
+					"type": "float"
+				},
+				"expire_date": {
+					"type": "date"
+				},
+				"manual_verified": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"cust_id": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				},
+				"modify_date": {
+					"type": "date"
+				},
+				"activated": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"ignore_above": 256,
+							"type": "keyword"
+						}
+					}
+				}
+			}
+		}
+	}
+}

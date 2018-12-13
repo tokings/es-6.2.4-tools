@@ -1,0 +1,683 @@
+{
+	"settings": {
+		"index": {
+			"number_of_shards": "1",
+			"number_of_replicas": "0"
+		}
+	},
+	"mappings": {
+		"table": {
+			"properties": {
+				"adv_pmt_cnt": {
+					"type": "long"
+				},
+				"adv_pmt_ratio": {
+					"type": "float"
+				},
+				"age": {
+					"type": "long"
+				},
+				"age_hst": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"age_segment": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"amount_ch_cnt": {
+					"type": "long"
+				},
+				"annual_income": {
+					"type": "float"
+				},
+				"avg_amount": {
+					"type": "float"
+				},
+				"avg_loan_amt": {
+					"type": "float"
+				},
+				"avg_rate": {
+					"type": "float"
+				},
+				"cert_id": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"city_code": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"company": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"company_adress": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"constellation": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"county_code": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"credit_prod_cnt": {
+					"type": "long"
+				},
+				"cust_name": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"deco_activated": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"deco_actived_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"deco_avg_credit_amount": {
+					"type": "float"
+				},
+				"deco_channel_code": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"deco_check_type": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"deco_credit_amount": {
+					"type": "float"
+				},
+				"deco_credit_amount_ch_cnt": {
+					"type": "long"
+				},
+				"deco_expire_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"deco_latest_expire_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"deco_loan_amount": {
+					"type": "float"
+				},
+				"deco_loan_prod": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"deco_manual_verified": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"deco_max_credit_amount": {
+					"type": "float"
+				},
+				"deco_modify_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"deco_operator_id": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"deco_rate": {
+					"type": "float"
+				},
+				"deco_recheck_operator": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"deco_source_type": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"deco_start_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"deco_status": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"deco_validate_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"device_ch_cnt": {
+					"type": "long"
+				},
+				"device_type_ch_cnt": {
+					"type": "long"
+				},
+				"duty": {
+					"type": "long"
+				},
+				"except_login_cnt": {
+					"type": "long"
+				},
+				"frozen_cnt": {
+					"type": "long"
+				},
+				"frozen_total_amount": {
+					"type": "float"
+				},
+				"frozen_type": {
+					"type": "long"
+				},
+				"highest_degree": {
+					"type": "long"
+				},
+				"highest_education": {
+					"type": "long"
+				},
+				"household_address": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"id": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"in_black_lst": {
+					"type": "long"
+				},
+				"industry": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"loan_cnt": {
+					"type": "long"
+				},
+				"login_cnt": {
+					"type": "long"
+				},
+				"ltd_highest_bal": {
+					"type": "float"
+				},
+				"ltd_highest_prin": {
+					"type": "float"
+				},
+				"marital_status": {
+					"type": "long"
+				},
+				"max_adv_pmt": {
+					"type": "float"
+				},
+				"max_amount": {
+					"type": "float"
+				},
+				"max_cpd": {
+					"type": "long"
+				},
+				"max_loan_amt": {
+					"type": "float"
+				},
+				"max_rate": {
+					"type": "float"
+				},
+				"mobile_no": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"mobile_operation_cmp": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"occuptation_name": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"openid": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"police_station_code": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"positional_title": {
+					"type": "long"
+				},
+				"province_code": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"sex": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"stat_dt": {
+					"type": "long"
+				},
+				"sum_adv_pmt": {
+					"type": "float"
+				},
+				"sum_amount": {
+					"type": "float"
+				},
+				"sum_loan_amt": {
+					"type": "float"
+				},
+				"unfrozen_cnt": {
+					"type": "long"
+				},
+				"unfrozen_total_amount": {
+					"type": "float"
+				},
+				"unfrozen_type": {
+					"type": "long"
+				},
+				"verify_cnt": {
+					"type": "long"
+				},
+				"wb_city": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"wb_province": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"wb_sex": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"work_activated": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"work_actived_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"work_avg_credit_amount": {
+					"type": "float"
+				},
+				"work_channel_code": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"work_check_type": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"work_credit_amount": {
+					"type": "float"
+				},
+				"work_credit_amount_ch_cnt": {
+					"type": "long"
+				},
+				"work_expire_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"work_latest_expire_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"work_loan_amount": {
+					"type": "float"
+				},
+				"work_loan_prod": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"work_manual_verified": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"work_max_credit_amount": {
+					"type": "float"
+				},
+				"work_modify_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"work_operator_id": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"work_rate": {
+					"type": "float"
+				},
+				"work_recheck_operator": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"work_source_type": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"work_start_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"work_status": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"work_validate_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"ya_activated": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"ya_actived_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"ya_avg_credit_amount": {
+					"type": "float"
+				},
+				"ya_channel_code": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"ya_credit_amount": {
+					"type": "float"
+				},
+				"ya_credit_amount_ch_cnt": {
+					"type": "long"
+				},
+				"ya_expire_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"ya_latest_expire_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"ya_loan_prod": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"ya_manual_verified": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"ya_max_credit_amount": {
+					"type": "float"
+				},
+				"ya_rate": {
+					"type": "float"
+				},
+				"ya_recheck_operator": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"ya_source_type": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"ya_start_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"ya_validate_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"zmxy_modify_date": {
+					"type": "date",
+          			"format": "yyyy-MM-dd HH:mm:ss.SSS"
+				},
+				"zmxy_score": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				},
+				"zodiac": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword",
+							"ignore_above": 256
+						}
+					}
+				}
+			}
+		}
+	}
+}

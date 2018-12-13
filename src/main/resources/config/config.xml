@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 目前可用的数据类型为：String, Integer, Float, Double, Date, Boolean Date的格式必须为yyyy-MM-dd 
+	HH:mm:ss 注意：/config/interval 这个部分用来调整配置文件的检测间隔时间(单位：秒)，禁止使用 -->
+<config>
+	<interval description="检测间隔时间(单位：秒)" type="Integer" value="10" />
+	<elasticsearch>
+		<clusterServers description="ES服务器群,多个服务器之间用逗号分割,服务器与端口之间用冒号分割"
+			type="String" value="100.64.101.101:9300,100.64.101.101:9301" />
+		<clusterName description="ES服务集群名" type="String" value="hncy58" />
+	</elasticsearch>
+</config>
