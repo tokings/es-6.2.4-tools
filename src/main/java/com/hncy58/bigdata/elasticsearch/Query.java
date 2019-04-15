@@ -375,6 +375,16 @@ public class Query
 	}
 	
 	/**
+	 * 添加geo距离过滤器
+	 * @param key
+	 * @param vlaues
+	 */
+	public void addGeoDistanceFilter(String key, Object... values)
+	{
+		criterias.add(new Criteria(operation.geodistance, key, values));
+	}
+	
+	/**
 	 * 添加查询排序
 	 * @param field	排序字段
 	 * @param order	排序方式，可选值：desc|asc，大小写不区分
