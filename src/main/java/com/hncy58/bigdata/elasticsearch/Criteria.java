@@ -16,7 +16,7 @@ public class Criteria
 	public static enum operation {
 		equal, like, range, between, wildcard, fuzzy, equalfilter, rangefilter, betweenfilter, 
 		wildcardfilter, parse, querystring, notequal, gt, gte, lt, lte, existsquery, notexistsquery,
-		geodistance
+		geodistance, has_child, has_parent
 	};
 		
 	public operation op;

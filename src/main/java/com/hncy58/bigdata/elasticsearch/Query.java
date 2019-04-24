@@ -385,6 +385,26 @@ public class Query
 	}
 	
 	/**
+	 * 添加has_parent过滤器
+	 * @param key
+	 * @param vlaues
+	 */
+	public void addHasParentFilter(String key, Object... values)
+	{
+		criterias.add(new Criteria(operation.has_parent, key, values));
+	}
+	
+	/**
+	 * 添加has_child过滤器
+	 * @param key
+	 * @param vlaues
+	 */
+	public void addHasChildFilter(String key, Object... values)
+	{
+		criterias.add(new Criteria(operation.has_child, key, values));
+	}
+	
+	/**
 	 * 添加查询排序
 	 * @param field	排序字段
 	 * @param order	排序方式，可选值：desc|asc，大小写不区分

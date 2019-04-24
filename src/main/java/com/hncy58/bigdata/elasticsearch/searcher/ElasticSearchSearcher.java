@@ -2,6 +2,7 @@ package com.hncy58.bigdata.elasticsearch.searcher;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
@@ -24,6 +26,8 @@ import org.elasticsearch.index.query.GeoValidationMethod;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
+import org.elasticsearch.join.query.HasChildQueryBuilder;
+import org.elasticsearch.join.query.HasParentQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AbstractAggregationBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
@@ -166,130 +170,7 @@ public class ElasticSearchSearcher implements LuceneSearcher {
 			qb = QueryBuilders.matchAllQuery();
 			builder.must(qb);
 		} else {
-			for (Criteria criteria : query.getCriterias()) {
-				qb = null;
-
-				// Query
-				if (criteria.op == Criteria.operation.like) {
-					qb = QueryBuilders.queryStringQuery(criteria.values[0].toString()).defaultField(criteria.key);
-				}
-				if (criteria.op == Criteria.operation.wildcard) {
-					BoolQueryBuilder subQuery = QueryBuilders.boolQuery();
-					for (Object match : criteria.values) {
-						qb = QueryBuilders.wildcardQuery(criteria.key, match.toString());
-						subQuery.should(qb);
-					}
-					builder.must(subQuery);
-					continue;
-				}
-				if (criteria.op == Criteria.operation.notequal) {
-					qb = QueryBuilders.termsQuery(criteria.key, criteria.values);
-					builder.mustNot(qb);
-					continue;
-				}
-
-				// add by lds 20180827 existsquery 与 notexistsquery，搜索中是否存在某个字段
-				if (criteria.op == Criteria.operation.existsquery) {
-					builder.must(QueryBuilders.existsQuery(criteria.key));
-					continue;
-				}
-				if (criteria.op == Criteria.operation.notexistsquery) {
-					builder.mustNot(QueryBuilders.existsQuery(criteria.key));
-					continue;
-				}
-
-				// added by tdz at 2019-04-12
-				if (criteria.op == Criteria.operation.geodistance) {
-					GeoDistanceQueryBuilder tmpqb = QueryBuilders.geoDistanceQuery(criteria.key).point(
-							Double.valueOf(criteria.values[0].toString()),
-							Double.valueOf(criteria.values[1].toString()));
-					if (criteria.values.length > 3) {
-						tmpqb.distance(Double.valueOf(criteria.values[2].toString()),
-								DistanceUnit.fromString(criteria.values[3].toString()));
-						tmpqb.geoDistance(GeoDistance.fromString(criteria.values[4].toString()));
-					} else {
-						tmpqb.distance(Double.valueOf(criteria.values[2].toString()), DistanceUnit.DEFAULT);
-						if (criteria.values.length > 4) {
-							tmpqb.geoDistance(GeoDistance.fromString(criteria.values[4].toString()));
-						}
-					}
-					qb = tmpqb;
-				}
-				// added by tdz end
-
-				if (criteria.op == Criteria.operation.querystring) {
-					QueryStringQueryBuilder tmpQb = QueryBuilders.queryStringQuery(criteria.values[0].toString());
-					if (criteria.key != null) {
-						tmpQb.defaultField(criteria.key);
-					}
-					qb = tmpQb;
-				}
-				if (criteria.op == Criteria.operation.equal) {
-					qb = QueryBuilders.termsQuery(criteria.key, criteria.values);
-				}
-				if (criteria.op == Criteria.operation.range) {
-					qb = QueryBuilders.rangeQuery(criteria.key).includeLower(false).from(criteria.values[0])
-							.to(criteria.values[1]);
-				}
-				if (criteria.op == Criteria.operation.between) {
-					qb = QueryBuilders.rangeQuery(criteria.key).gte(criteria.values[0]).lte(criteria.values[1]);
-				}
-				if (criteria.op == Criteria.operation.gt) {
-					qb = QueryBuilders.rangeQuery(criteria.key).gt(criteria.values[0]);
-				}
-				if (criteria.op == Criteria.operation.gte) {
-					qb = QueryBuilders.rangeQuery(criteria.key).gte(criteria.values[0]);
-				}
-				if (criteria.op == Criteria.operation.lt) {
-					qb = QueryBuilders.rangeQuery(criteria.key).lt(criteria.values[0]);
-				}
-				if (criteria.op == Criteria.operation.lte) {
-					qb = QueryBuilders.rangeQuery(criteria.key).lte(criteria.values[0]);
-				}
-				if (criteria.op == Criteria.operation.fuzzy) {
-					if (criteria.values.length > 2) {
-						int fuzziness = (int) criteria.values[1];
-						int maxExpansions = (int) criteria.values[2];
-
-						qb = QueryBuilders.fuzzyQuery(criteria.key, criteria.values[0])
-								.fuzziness(Fuzziness.fromEdits(fuzziness)).maxExpansions(maxExpansions);
-						;
-					} else {
-						qb = QueryBuilders.fuzzyQuery(criteria.key, criteria.values[0]).fuzziness(Fuzziness.AUTO);
-					}
-				}
-				if (qb != null) {
-					if (criteria.boost > 1) {
-						builder.must(qb).boost(criteria.boost);
-					} else {
-						builder.must(qb);
-					}
-					continue;
-				}
-
-				// Filter
-				if (criteria.op == Criteria.operation.equalfilter) {
-
-					fb = QueryBuilders.termsQuery(criteria.key, criteria.values);
-					filter.must(fb);
-				}
-				if (criteria.op == Criteria.operation.rangefilter) {
-					fb = QueryBuilders.rangeQuery(criteria.key).includeLower(false).from(criteria.values[0])
-							.to(criteria.values[1]);
-					filter.must(fb);
-				}
-				if (criteria.op == Criteria.operation.betweenfilter) {
-					fb = QueryBuilders.rangeQuery(criteria.key).includeLower(true).includeUpper(true)
-							.from(criteria.values[0]).to(criteria.values[1]);
-					filter.must(fb);
-				}
-				if (criteria.op == Criteria.operation.wildcard) {
-					for (Object match : criteria.values) {
-						fb = QueryBuilders.termQuery(criteria.key, match.toString());
-						filter.must(fb);
-					}
-				}
-			}
+			fillQuery(builder, filter, qb, fb, query.getCriterias().toArray(new Criteria[query.getCriterias().size()]));
 		}
 
 		int from = (query.getPageNo() - 1) * query.getPageSize();
@@ -349,6 +230,180 @@ public class ElasticSearchSearcher implements LuceneSearcher {
 
 		return response;
 	}
+	
+	private void fillQuery(BoolQueryBuilder builder, BoolQueryBuilder filter, QueryBuilder qb, QueryBuilder fb, Criteria... criterias) {
+		
+		for (Criteria criteria : criterias) {
+			qb = null;
+			// Query
+			if (criteria.op == Criteria.operation.like) {
+				qb = QueryBuilders.queryStringQuery(criteria.values[0].toString()).defaultField(criteria.key);
+			}
+			if (criteria.op == Criteria.operation.wildcard) {
+				BoolQueryBuilder subQuery = QueryBuilders.boolQuery();
+				for (Object match : criteria.values) {
+					qb = QueryBuilders.wildcardQuery(criteria.key, match.toString());
+					subQuery.should(qb);
+				}
+				builder.must(subQuery);
+				continue;
+			}
+			if (criteria.op == Criteria.operation.notequal) {
+				qb = QueryBuilders.termsQuery(criteria.key, criteria.values);
+				builder.mustNot(qb);
+				continue;
+			}
+
+			// add by lds 20180827 existsquery 与 notexistsquery，搜索中是否存在某个字段
+			if (criteria.op == Criteria.operation.existsquery) {
+				builder.must(QueryBuilders.existsQuery(criteria.key));
+				continue;
+			}
+			if (criteria.op == Criteria.operation.notexistsquery) {
+				builder.mustNot(QueryBuilders.existsQuery(criteria.key));
+				continue;
+			}
+
+			// added by tdz at 2019-04-12
+			if (criteria.op == Criteria.operation.geodistance) {
+				GeoDistanceQueryBuilder tmpqb = QueryBuilders.geoDistanceQuery(criteria.key).point(
+						Double.valueOf(criteria.values[0].toString()),
+						Double.valueOf(criteria.values[1].toString()));
+				if (criteria.values.length > 3) {
+					tmpqb.distance(Double.valueOf(criteria.values[2].toString()),
+							DistanceUnit.fromString(criteria.values[3].toString()));
+					tmpqb.geoDistance(GeoDistance.fromString(criteria.values[4].toString()));
+				} else {
+					tmpqb.distance(Double.valueOf(criteria.values[2].toString()), DistanceUnit.DEFAULT);
+					if (criteria.values.length > 4) {
+						tmpqb.geoDistance(GeoDistance.fromString(criteria.values[4].toString()));
+					}
+				}
+				qb = tmpqb;
+			}
+			// added by tdz at 2019-04-12 end
+
+			// added by tdz at 2019-04-24
+			if(criteria.op == Criteria.operation.has_parent) {
+				
+				QueryBuilder queryBuilder = null ;
+				Criteria[] subCriterias = (Criteria[]) criteria.values;
+				
+				BoolQueryBuilder subBuilder = QueryBuilders.boolQuery();
+				BoolQueryBuilder subFilter = QueryBuilders.boolQuery();
+				QueryBuilder subQb = null;
+				QueryBuilder subFb = null;
+				
+				fillQuery(subBuilder, subFilter, subQb, subFb, subCriterias);
+				
+				if (filter.hasClauses()) {
+					queryBuilder = QueryBuilders.boolQuery().must(subBuilder).must(subFilter);
+				} else {
+					queryBuilder = subBuilder;
+				}
+				
+				HasParentQueryBuilder tmpqb = new HasParentQueryBuilder(criteria.key, queryBuilder , true);
+				qb = tmpqb;
+			}
+			
+			if(criteria.op == Criteria.operation.has_child) {
+				
+				QueryBuilder queryBuilder = null ;
+				Criteria[] subCriterias = (Criteria[]) criteria.values;
+				
+				BoolQueryBuilder subBuilder = QueryBuilders.boolQuery();
+				BoolQueryBuilder subFilter = QueryBuilders.boolQuery();
+				QueryBuilder subQb = null;
+				QueryBuilder subFb = null;
+				
+				fillQuery(subBuilder, subFilter, subQb, subFb, subCriterias);
+				
+				if (filter.hasClauses()) {
+					queryBuilder = QueryBuilders.boolQuery().must(subBuilder).must(subFilter);
+				} else {
+					queryBuilder = subBuilder;
+				}
+				
+				HasChildQueryBuilder tmpqb = new HasChildQueryBuilder(criteria.key, queryBuilder , ScoreMode.Total);
+				qb = tmpqb;
+			}
+			// added by tdz at 2019-04-24 end
+			
+			
+			if (criteria.op == Criteria.operation.querystring) {
+				QueryStringQueryBuilder tmpQb = QueryBuilders.queryStringQuery(criteria.values[0].toString());
+				if (criteria.key != null) {
+					tmpQb.defaultField(criteria.key);
+				}
+				qb = tmpQb;
+			}
+			if (criteria.op == Criteria.operation.equal) {
+				qb = QueryBuilders.termsQuery(criteria.key, criteria.values);
+			}
+			if (criteria.op == Criteria.operation.range) {
+				qb = QueryBuilders.rangeQuery(criteria.key).includeLower(false).from(criteria.values[0])
+						.to(criteria.values[1]);
+			}
+			if (criteria.op == Criteria.operation.between) {
+				qb = QueryBuilders.rangeQuery(criteria.key).gte(criteria.values[0]).lte(criteria.values[1]);
+			}
+			if (criteria.op == Criteria.operation.gt) {
+				qb = QueryBuilders.rangeQuery(criteria.key).gt(criteria.values[0]);
+			}
+			if (criteria.op == Criteria.operation.gte) {
+				qb = QueryBuilders.rangeQuery(criteria.key).gte(criteria.values[0]);
+			}
+			if (criteria.op == Criteria.operation.lt) {
+				qb = QueryBuilders.rangeQuery(criteria.key).lt(criteria.values[0]);
+			}
+			if (criteria.op == Criteria.operation.lte) {
+				qb = QueryBuilders.rangeQuery(criteria.key).lte(criteria.values[0]);
+			}
+			if (criteria.op == Criteria.operation.fuzzy) {
+				if (criteria.values.length > 2) {
+					int fuzziness = (int) criteria.values[1];
+					int maxExpansions = (int) criteria.values[2];
+
+					qb = QueryBuilders.fuzzyQuery(criteria.key, criteria.values[0])
+							.fuzziness(Fuzziness.fromEdits(fuzziness)).maxExpansions(maxExpansions);
+					;
+				} else {
+					qb = QueryBuilders.fuzzyQuery(criteria.key, criteria.values[0]).fuzziness(Fuzziness.AUTO);
+				}
+			}
+			if (qb != null) {
+				if (criteria.boost > 1) {
+					builder.must(qb).boost(criteria.boost);
+				} else {
+					builder.must(qb);
+				}
+				continue;
+			}
+
+			// Filter
+			if (criteria.op == Criteria.operation.equalfilter) {
+
+				fb = QueryBuilders.termsQuery(criteria.key, criteria.values);
+				filter.must(fb);
+			}
+			if (criteria.op == Criteria.operation.rangefilter) {
+				fb = QueryBuilders.rangeQuery(criteria.key).includeLower(false).from(criteria.values[0])
+						.to(criteria.values[1]);
+				filter.must(fb);
+			}
+			if (criteria.op == Criteria.operation.betweenfilter) {
+				fb = QueryBuilders.rangeQuery(criteria.key).includeLower(true).includeUpper(true)
+						.from(criteria.values[0]).to(criteria.values[1]);
+				filter.must(fb);
+			}
+			if (criteria.op == Criteria.operation.wildcard) {
+				for (Object match : criteria.values) {
+					fb = QueryBuilders.termQuery(criteria.key, match.toString());
+					filter.must(fb);
+				}
+			}
+		}
+	}
 
 	private Map<String, Object> toMap(SearchHit hit, float maxScore, float findWordHitRatio) {
 		Map<String, Object> map = new HashMap<>();
@@ -358,6 +413,7 @@ public class ElasticSearchSearcher implements LuceneSearcher {
 			for (Entry<String, DocumentField> field : fields.entrySet()) {
 				map.put(field.getKey(), field.getValue().getValues().get(0));
 			}
+			map.putAll(hit.getSourceAsMap());
 		} else {
 			map = hit.getSourceAsMap();
 			map.put("score", toPercent(hit.getScore() * 100 / maxScore * findWordHitRatio));
@@ -367,7 +423,7 @@ public class ElasticSearchSearcher implements LuceneSearcher {
 		map.put("_id", hit.getId());
 		map.put("_type", hit.getType());
 		map.put("_index", hit.getIndex());
-
+		
 		return map;
 	}
 

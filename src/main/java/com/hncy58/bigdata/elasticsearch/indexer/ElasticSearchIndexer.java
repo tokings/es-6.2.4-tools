@@ -305,6 +305,18 @@ public class ElasticSearchIndexer extends AbstractIndexer {
 			throw new SearchEngineException("文档(" + db + "." + table + ":" + row + ")创建索引失败：" + e);
 		}
 	}
+	
+	@Override
+	public void index(String db, String table, String id, String parentId, Map<String, Object> row) throws SearchEngineException {
+		try {
+			XContentBuilder builder = XContentFactory.jsonBuilder();
+			builder.map(row);
+			IndexResponse resp = client.prepareIndex(db, table).setSource(builder).setId(id).setRouting(parentId).setTimeout(TIMEOUT).execute().actionGet();
+			System.out.println(resp.status());
+		} catch (Exception e) {
+			throw new SearchEngineException("文档(" + db + "." + table + ":" + row + ")创建索引失败：" + e);
+		}
+	}
 
 	/**
 	 * 从指定表进行检索
@@ -490,13 +502,7 @@ public class ElasticSearchIndexer extends AbstractIndexer {
 
 				builder = XContentFactory.jsonBuilder();
 
-				builder.startObject();
-
-				for (Entry<String, Object> entry : row.entrySet()) {
-					builder.field(entry.getKey(), entry.getValue());
-				}
-
-				builder.endObject();
+				builder.map(row);
 
 				index = client.prepareIndex(indice, table).setSource(builder).setId(row.get(keyFieldName).toString());
 
@@ -751,6 +757,59 @@ public class ElasticSearchIndexer extends AbstractIndexer {
 
 		} catch (Exception e) {
 			throw new SearchEngineException("文档(" + datasource + "." + table + ":" + row + ")创建索引失败：" + e);
+		}
+	}
+	
+	@Override
+	public void indexAll(String indice, String table, String keyFieldName, String parentFieldName,
+			List<Map<String, Object>> list) throws SearchEngineException {
+
+		try {
+			XContentBuilder builder;
+
+			IndexRequestBuilder index;
+
+			BulkRequestBuilder request = client.prepareBulk();
+
+			BulkResponse response = null;
+
+			boolean gtBatchSize = (list.size() > BATCH_COMMIT_SIZE);
+
+			long i = 0;
+
+			for (Map<String, Object> row : list) {
+
+				builder = XContentFactory.jsonBuilder();
+
+				builder.map(row);
+
+				index = client.prepareIndex(indice, table, row.get(keyFieldName).toString()).setSource(builder)
+						.setRouting(row.get(parentFieldName).toString());
+
+				request.add(index);
+
+				if (gtBatchSize) {
+					if (i % BATCH_COMMIT_SIZE == 0) {
+						response = request.setTimeout(TIMEOUT_BAT).execute().actionGet();
+						if (response.hasFailures()) {
+							throw new SearchEngineException(response.buildFailureMessage());
+						}
+						// 如果分批提交，每次提交后重新创建空的批量请求
+						request = client.prepareBulk();
+					}
+				}
+
+				i++;
+			}
+			
+			if(request.numberOfActions() > 0) {
+				response = request.setTimeout(TIMEOUT_BAT).execute().actionGet();
+				if (response.hasFailures()) {
+					throw new SearchEngineException(response.buildFailureMessage());
+				}
+			}
+		} catch (Exception e) {
+			throw new SearchEngineException("批量创建文档索引失败：" + e);
 		}
 	}
 

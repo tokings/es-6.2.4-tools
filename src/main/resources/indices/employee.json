@@ -1,0 +1,52 @@
+{
+	"settings": {
+		"index": {
+			"number_of_shards": "1",
+			"number_of_replicas": "0"
+		}
+	},
+	"mappings": {
+		"employee": {
+			"_parent": {
+				"type": "company"
+			},
+			"_routing": {
+				"required": false
+			},
+			"properties": {
+				"my_join_field": {
+					"type": "join",
+					"relations": {
+						"my_parent": "my_child"
+					}
+				},
+				"name": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword"
+						}
+					}
+				},
+				"birthday": {
+					"type": "date",
+					"format": "yyyy-MM-dd||epoch_millis"
+				},
+				"hobby": {
+					"type": "text",
+					"fields": {
+						"keyword": {
+							"type": "keyword"
+						}
+					}
+				},
+				"companyId": {
+					"type": "keyword"
+				},
+				"employId": {
+					"type": "keyword"
+				}
+			}
+		}
+	}
+}
