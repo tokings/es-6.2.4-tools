@@ -25,7 +25,7 @@ import com.hncy58.bigdata.elasticsearch.searcher.ElasticSearchSearcher;
 
 public class SchemaLoaderTest {
 
-	public static final ElasticSearchIndexer indexer = new ElasticSearchIndexer("localhost:9300,localhost:9301",
+	public static final ElasticSearchIndexer indexer = new ElasticSearchIndexer("100.66.70.202:9300,100.66.70.203:9300,100.66.70.204:9300",
 			"hncy58");
 
 	@Test
@@ -76,10 +76,10 @@ public class SchemaLoaderTest {
 	@Test
 	public void putMapping() {
 		Client client = indexer.getClient();
-		String index = "test_join_1";
-		String type = "_doc";
+		String index = "test_es";
+		String type = "table";
 		try {
-			Map schemaMap = SchemaLoader.loadIndexDefintionsFromJsonFile("/indices/test_join.json");
+			Map schemaMap = SchemaLoader.loadIndexDefintionsFromJsonFile("/indices/test_es.json");
 			PutMappingRequestBuilder builder = client.admin().indices().preparePutMapping(index);
 			PutMappingResponse res = builder.setType(type)
 					.setSource(JSON.toJSONString(schemaMap.get("mappings")), XContentType.JSON).get();
@@ -431,15 +431,20 @@ public class SchemaLoaderTest {
 
 	@Test
 	public void queryGeoPoint() {
-		String index = "test_20190412";
+		String index = "test_es";
 		ElasticSearchSearcher searcher = new ElasticSearchSearcher(indexer.getClient());
 		try {
 			Query query = new Query(1, 10000);
-			query.addGeoDistanceFilter("location", new Object[] { 40.71588, -73.98888, 10000 });
+			query.addGeoDistanceFilter("geo", new Object[] { 28.206703, 112.98612, 10000 });
 			// query.addEqualCriteria("id", "1");
+//			query.addEqualCriteria("ip", "127.0.0.1");
+//			query.addEqualCriteria("ip", "127.0.0.1/16");
+//			query.addRangeCriteria("ip", "127.0.0.0", "127.0.0.1");
+//			query.addBetweenCriteria("ip", "127.0.0.1", "127.0.0.1");
+			
 			PageQueryResult pr = searcher.query(new String[] { index }, "table", query);
 			pr.getResultSet().forEach(t -> System.out.println(t));
-
+			
 			System.out.println(pr.getTotalSize());
 
 		} catch (Exception e) {
