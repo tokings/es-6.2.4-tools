@@ -223,7 +223,8 @@ public class ElasticSearchSearcher implements LuceneSearcher {
 		}
 
 		if (query.getOutputFields() != null && query.getOutputFields().length > 0) {
-			req.fields(query.getOutputFields());
+//			req.fields(query.getOutputFields());
+			req.setFetchSource(query.getOutputFields(), null);
 		}
 
 		response = req.execute().actionGet();
@@ -415,6 +416,7 @@ public class ElasticSearchSearcher implements LuceneSearcher {
 			}
 			map.putAll(hit.getSourceAsMap());
 		} else {
+			Map fileds = hit.getFields();
 			map = hit.getSourceAsMap();
 			map.put("score", toPercent(hit.getScore() * 100 / maxScore * findWordHitRatio));
 			replaceDateTimeAndHighlightField(hit);

@@ -24,15 +24,17 @@ import com.hncy58.bigdata.elasticsearch.searcher.ElasticSearchSearcher;
 
 public class ElasticSearchIndexerTest {
 
-	private static String[] dbs = { "test_20181211" };
+	private static String[] dbs = { "risk_warning_customer_credit" };
 	private static String table = "table";
 
 	@Test
 	public void testSearcherByEqual() {
-		ElasticSearchSearcher elasticSearchSearcher = new ElasticSearchSearcher();
+		ElasticSearchSearcher elasticSearchSearcher = new ElasticSearchSearcher("100.66.70.202:9300,100.66.70.203:9300,100.66.70.204:9300",
+				"hncy58");
 
-		Query query = new Query(1, 1);
-		query.addEqualFilter("key", "2");
+		Query query = new Query(1, 1, new String[]{"lbs_county","mobile_no"});
+//		Query query = new Query(1, 1);
+//		query.addEqualFilter("key", "2");
 		try {
 			PageQueryResult result = elasticSearchSearcher.query(dbs, table, query);
 			System.out.println(result.toMap());
